@@ -32,7 +32,7 @@ public class RestCreateWorkflowAction extends BaseRestHandler {
     private static final String CREATE_WORKFLOW_ACTION = "create_workflow_action";
 
     /**
-     * Intantiates a new RestCreateWorkflowAction
+     * Instantiates a new RestCreateWorkflowAction
      */
     public RestCreateWorkflowAction() {}
 
