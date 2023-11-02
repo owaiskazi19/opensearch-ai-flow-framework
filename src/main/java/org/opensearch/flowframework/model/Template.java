@@ -30,6 +30,7 @@ import static org.opensearch.flowframework.common.CommonValue.COMPATIBILITY_FIEL
 import static org.opensearch.flowframework.common.CommonValue.DESCRIPTION_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.NAME_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.TEMPLATE_FIELD;
+import static org.opensearch.flowframework.common.CommonValue.UI_METADATA_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.USER_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.USE_CASE_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.VERSION_FIELD;
@@ -46,6 +47,7 @@ public class Template implements ToXContentObject {
     private final Version templateVersion;
     private final List<Version> compatibilityVersion;
     private final Map<String, Workflow> workflows;
+    private Map<String, Object> uiMetadata;
     private final User user;
 
     /**
@@ -57,6 +59,7 @@ public class Template implements ToXContentObject {
      * @param templateVersion The version of this template
      * @param compatibilityVersion OpenSearch version compatibility of this template
      * @param workflows Workflow graph definitions corresponding to the defined operations.
+     * @param uiMetadata The UI metadata related to the given workflow
      * @param user The user extracted from the thread context from the request
      */
     public Template(
@@ -66,6 +69,7 @@ public class Template implements ToXContentObject {
         Version templateVersion,
         List<Version> compatibilityVersion,
         Map<String, Workflow> workflows,
+        Map<String, Object> uiMetadata,
         User user
     ) {
         this.name = name;
@@ -74,6 +78,7 @@ public class Template implements ToXContentObject {
         this.templateVersion = templateVersion;
         this.compatibilityVersion = List.copyOf(compatibilityVersion);
         this.workflows = Map.copyOf(workflows);
+        this.uiMetadata = uiMetadata;
         this.user = user;
     }
 
@@ -104,6 +109,11 @@ public class Template implements ToXContentObject {
             xContentBuilder.field(e.getKey(), e.getValue(), params);
         }
         xContentBuilder.endObject();
+
+        if (uiMetadata != null && !uiMetadata.isEmpty()) {
+            xContentBuilder.field(UI_METADATA_FIELD, uiMetadata);
+        }
+
         if (user != null) {
             xContentBuilder.field(USER_FIELD, user);
         }
@@ -125,6 +135,7 @@ public class Template implements ToXContentObject {
         Version templateVersion = null;
         List<Version> compatibilityVersion = new ArrayList<>();
         Map<String, Workflow> workflows = new HashMap<>();
+        Map<String, Object> uiMetadata = null;
         User user = null;
 
         ensureExpectedToken(XContentParser.Token.START_OBJECT, parser.currentToken(), parser);
@@ -169,6 +180,9 @@ public class Template implements ToXContentObject {
                         workflows.put(workflowFieldName, Workflow.parse(parser));
                     }
                     break;
+                case UI_METADATA_FIELD:
+                    uiMetadata = parser.map();
+                    break;
                 case USER_FIELD:
                     user = User.parse(parser);
                     break;
@@ -180,7 +194,7 @@ public class Template implements ToXContentObject {
             throw new IOException("An template object requires a name.");
         }
 
-        return new Template(name, description, useCase, templateVersion, compatibilityVersion, workflows, user);
+        return new Template(name, description, useCase, templateVersion, compatibilityVersion, workflows, uiMetadata, user);
     }
 
     /**
@@ -274,6 +288,14 @@ public class Template implements ToXContentObject {
      */
     public Map<String, Workflow> workflows() {
         return workflows;
+    }
+
+    /**
+     * A map corresponding to the UI metadata
+     * @return the userOutputs
+     */
+    public Map<String, Object> getUiMetadata() {
+        return uiMetadata;
     }
 
     /**

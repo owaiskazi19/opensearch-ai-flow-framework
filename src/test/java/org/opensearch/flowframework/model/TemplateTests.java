@@ -43,6 +43,7 @@ public class TemplateTests extends OpenSearchTestCase {
             templateVersion,
             compatibilityVersion,
             Map.of("workflow", workflow),
+            Map.of(),
             null
         );
 

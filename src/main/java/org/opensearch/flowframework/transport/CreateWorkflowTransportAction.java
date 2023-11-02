@@ -70,6 +70,7 @@ public class CreateWorkflowTransportAction extends HandledTransportAction<Workfl
             request.getTemplate().templateVersion(),
             request.getTemplate().compatibilityVersion(),
             request.getTemplate().workflows(),
+            request.getTemplate().getUiMetadata(),
             user
         );
         if (request.getWorkflowId() == null) {

@@ -58,6 +58,7 @@ public class RestCreateWorkflowActionTests extends OpenSearchTestCase {
             templateVersion,
             compatibilityVersions,
             Map.of("workflow", workflow),
+            Map.of(),
             TestHelpers.randomUser()
         );
 
