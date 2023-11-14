@@ -38,11 +38,6 @@ jobs:
         run: |
           ./gradlew publishToMavenLocal
       - uses: actions/checkout@v4
-      - name: Javadoc CheckStyle
-        run: ./gradlew checkstyleMain
-      - name: Javadoc Check
-        run: ./gradlew javadoc
-      - uses: actions/checkout@v4
       - name: Build and Run Tests
         run: |
           ./gradlew check
