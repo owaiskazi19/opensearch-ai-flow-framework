@@ -9,13 +9,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  spotless:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Spotless Check
-        run: ./gradlew spotlessCheck
-  javadoc:
+  mavenlocal:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,6 +19,15 @@ jobs:
       - name: Publish to Maven Local
         run: |
           ./gradlew publishToMavenLocal
+  spotless:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Spotless Check
+        run: ./gradlew spotlessCheck
+  javadoc:
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v4
       - name: Javadoc CheckStyle
         run: ./gradlew checkstyleMain
