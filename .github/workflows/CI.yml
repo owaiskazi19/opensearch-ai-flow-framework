@@ -19,6 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          repository: opensearch-project/ml-commons
+          ref: feature/agent_framework_dev
+      - name: Publish to Maven Local
+        run: |
+          ./gradlew publishToMavenLocal
+      - uses: actions/checkout@v4
       - name: Javadoc CheckStyle
         run: ./gradlew checkstyleMain
       - name: Javadoc Check
@@ -38,13 +45,6 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
           distribution: temurin
-      - uses: actions/checkout@v4
-        with:
-          repository: opensearch-project/ml-commons
-          ref: feature/agent_framework_dev
-      - name: Publish to Maven Local
-        run: |
-          ./gradlew publishToMavenLocal
       - uses: actions/checkout@v4
       - name: Build and Run Tests
         run: |
