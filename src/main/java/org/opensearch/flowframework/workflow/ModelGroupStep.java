@@ -45,7 +45,7 @@ public class ModelGroupStep implements WorkflowStep {
     static final String NAME = "model_group";
 
     /**
-     * Instantiate this class
+     * Instantiate this claszz
      * @param mlClient client to instantiate MLClient
      */
     public ModelGroupStep(MachineLearningNodeClient mlClient) {
