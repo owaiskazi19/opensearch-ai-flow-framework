@@ -51,7 +51,7 @@ public class RegisterLocalModelStep implements WorkflowStep {
 
     private static final Logger logger = LogManager.getLogger(RegisterLocalModelStep.class);
 
-    private MachineLearningNodeClient mlClient;
+    private final MachineLearningNodeClient mlClient;
 
     static final String NAME = "register_local_model";
 

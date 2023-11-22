@@ -92,5 +92,21 @@
             "model_id",
             "register_model_status"
         ]
+    },
+    "register_agent": {
+        "inputs":[
+            "name",
+            "type",
+            "llm",
+            "tools",
+            "parameters",
+            "memory",
+            "created_time",
+            "last_updated_time",
+            "app_type"
+        ],
+        "outputs":[
+            "agent_id"
+        ]
     }
 }

@@ -32,7 +32,7 @@ import static org.opensearch.flowframework.common.CommonValue.TASK_ID;
 public class GetMLTaskStep implements WorkflowStep {
 
     private static final Logger logger = LogManager.getLogger(GetMLTaskStep.class);
-    private MachineLearningNodeClient mlClient;
+    private final MachineLearningNodeClient mlClient;
     static final String NAME = "get_ml_task";
 
     /**

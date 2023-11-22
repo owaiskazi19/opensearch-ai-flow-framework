@@ -152,7 +152,7 @@ public class ProcessNode {
 
                 logger.info("Starting {}.", this.id);
                 // get the input data from predecessor(s)
-                List<WorkflowData> input = new ArrayList<WorkflowData>();
+                List<WorkflowData> input = new ArrayList<>();
                 input.add(this.input);
                 for (CompletableFuture<WorkflowData> cf : predFutures) {
                     input.add(cf.get());

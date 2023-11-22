@@ -148,4 +148,13 @@ public class CommonValue {
     public static final String USER_OUTPUTS_FIELD = "user_outputs";
     /** The template field name for template resources created */
     public static final String RESOURCES_CREATED_FIELD = "resources_created";
+    /** LLM Name for registering an agent */
+    public static final String LLM_FIELD = "llm";
+    public static final String TOOLS_FIELD = "tools";
+    public static final String MEMORY_FIELD = "memory";
+    public static final String CREATED_TIME = "created_time";
+    public static final String LAST_UPDATED_TIME_FIELD = "last_updated_time";
+    public static final String APP_TYPE_FIELD = "app_type";
+    public static final String AGENT_ID = "agent_id";
+
 }

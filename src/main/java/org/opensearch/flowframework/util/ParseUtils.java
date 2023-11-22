@@ -113,4 +113,18 @@ public class ParseUtils {
         return User.parse(userStr);
     }
 
+    /**
+     * Generates a string to string Map
+     * @param map content map
+     * @param fieldName fieldName
+     * @return instance of the map
+     */
+    @SuppressWarnings("unchecked")
+    public static Map<String, String> getStringToStringMap(Object map, String fieldName) {
+        if (map instanceof Map) {
+            return (Map<String, String>) map;
+        }
+        throw new IllegalArgumentException("[" + fieldName + "] must be a key-value map.");
+    }
+
 }
