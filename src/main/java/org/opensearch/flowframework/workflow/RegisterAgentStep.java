@@ -56,12 +56,15 @@ public class RegisterAgentStep implements WorkflowStep {
 
     static final String NAME = "register_agent";
 
+    private List<MLToolSpec> mlToolSpecList;
+
     /**
      * Instantiate this class
      * @param mlClient client to instantiate MLClient
      */
     public RegisterAgentStep(MachineLearningNodeClient mlClient) {
         this.mlClient = mlClient;
+        this.mlToolSpecList = new ArrayList<>();
     }
 
     @Override
@@ -114,10 +117,10 @@ public class RegisterAgentStep implements WorkflowStep {
                         llm = (LLMSpec) content.get(LLM_FIELD);
                         break;
                     case TOOLS_FIELD:
-                        tools = (List<MLToolSpec>) content.get(TOOLS_FIELD);
+                        tools = addTools(entry.getValue());
                         break;
                     case PARAMETERS_FIELD:
-                        parameters = getStringToStringMap(content.get(PARAMETERS_FIELD), PARAMETERS_FIELD);
+                        parameters = getStringToStringMap(entry.getValue(), PARAMETERS_FIELD);
                         break;
                     case MEMORY_FIELD:
                         memory = (MLMemorySpec) content.get(MEMORY_FIELD);
@@ -169,5 +172,13 @@ public class RegisterAgentStep implements WorkflowStep {
     @Override
     public String getName() {
         return NAME;
+    }
+
+    private List<MLToolSpec> addTools(Object tool) {
+        for (Map<?, ?> map : (Map<?, ?>[]) tool) {
+            MLToolSpec mlToolSpec = (MLToolSpec) map.get(TOOLS_FIELD);
+            mlToolSpecList.add(mlToolSpec);
+        }
+        return mlToolSpecList;
     }
 }
