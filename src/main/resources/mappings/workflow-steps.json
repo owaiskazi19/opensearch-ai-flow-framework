@@ -108,5 +108,13 @@
         "outputs":[
             "agent_id"
         ]
+    },
+    "tool": {
+        "inputs": [
+            "type"
+        ],
+        "outputs": [
+            "tools"
+        ]
     }
 }
