@@ -286,7 +286,6 @@ public class FlowFrameworkIndicesHandler {
                 XContentBuilder builder = XContentFactory.jsonBuilder();
                 ThreadContext.StoredContext context = client.threadPool().getThreadContext().stashContext()
             ) {
-                // FAILING HERE
                 request.source(template.toXContent(builder, ToXContent.EMPTY_PARAMS))
                     .setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
                 client.index(request, ActionListener.runBefore(listener, () -> context.restore()));
