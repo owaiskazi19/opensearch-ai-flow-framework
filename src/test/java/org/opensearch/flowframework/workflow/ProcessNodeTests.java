@@ -56,7 +56,7 @@ public class ProcessNodeTests extends OpenSearchTestCase {
         // Tests where execute nas no timeout
         ProcessNode nodeA = new ProcessNode("A", new WorkflowStep() {
             @Override
-            public CompletableFuture<WorkflowData> execute(List<WorkflowData> data) {
+            public CompletableFuture<WorkflowData> execute(String nodeId, List<WorkflowData> data) {
                 CompletableFuture<WorkflowData> f = new CompletableFuture<>();
                 f.complete(new WorkflowData(Map.of("test", "output")));
                 return f;
@@ -90,7 +90,7 @@ public class ProcessNodeTests extends OpenSearchTestCase {
         // Tests where execute finishes before timeout
         ProcessNode nodeB = new ProcessNode("B", new WorkflowStep() {
             @Override
-            public CompletableFuture<WorkflowData> execute(List<WorkflowData> data) {
+            public CompletableFuture<WorkflowData> execute(String nodeId, List<WorkflowData> data) {
                 CompletableFuture<WorkflowData> future = new CompletableFuture<>();
                 testThreadPool.schedule(
                     () -> future.complete(WorkflowData.EMPTY),
@@ -120,7 +120,7 @@ public class ProcessNodeTests extends OpenSearchTestCase {
         // Tests where execute finishes after timeout
         ProcessNode nodeZ = new ProcessNode("Zzz", new WorkflowStep() {
             @Override
-            public CompletableFuture<WorkflowData> execute(List<WorkflowData> data) {
+            public CompletableFuture<WorkflowData> execute(String nodeId, List<WorkflowData> data) {
                 CompletableFuture<WorkflowData> future = new CompletableFuture<>();
                 testThreadPool.schedule(() -> future.complete(WorkflowData.EMPTY), TimeValue.timeValueMinutes(1), ThreadPool.Names.GENERIC);
                 return future;
@@ -147,7 +147,7 @@ public class ProcessNodeTests extends OpenSearchTestCase {
         // Tests where a predecessor future completed exceptionally
         ProcessNode nodeE = new ProcessNode("E", new WorkflowStep() {
             @Override
-            public CompletableFuture<WorkflowData> execute(List<WorkflowData> data) {
+            public CompletableFuture<WorkflowData> execute(String nodeId, List<WorkflowData> data) {
                 CompletableFuture<WorkflowData> f = new CompletableFuture<>();
                 f.complete(WorkflowData.EMPTY);
                 return f;

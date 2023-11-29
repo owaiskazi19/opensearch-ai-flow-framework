@@ -39,7 +39,7 @@ public class ToolStepTests extends OpenSearchTestCase {
     public void testTool() throws IOException, ExecutionException, InterruptedException {
         ToolStep toolStep = new ToolStep();
 
-        CompletableFuture<WorkflowData> future = toolStep.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = toolStep.execute("workflow_step_1", List.of(inputData));
 
         assertTrue(future.isDone());
         assertEquals(MLToolSpec.class, future.get().getContent().get("tools").getClass());

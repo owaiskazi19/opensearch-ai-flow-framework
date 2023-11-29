@@ -67,7 +67,7 @@ public class DeployModelStepTests extends OpenSearchTestCase {
             return null;
         }).when(machineLearningNodeClient).deploy(eq("modelId"), actionListenerCaptor.capture());
 
-        CompletableFuture<WorkflowData> future = deployModel.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = deployModel.execute("nodeId", List.of(inputData));
 
         verify(machineLearningNodeClient).deploy(eq("modelId"), actionListenerCaptor.capture());
 
@@ -87,7 +87,7 @@ public class DeployModelStepTests extends OpenSearchTestCase {
             return null;
         }).when(machineLearningNodeClient).deploy(eq("modelId"), actionListenerCaptor.capture());
 
-        CompletableFuture<WorkflowData> future = deployModel.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = deployModel.execute("nodeId", List.of(inputData));
 
         verify(machineLearningNodeClient).deploy(eq("modelId"), actionListenerCaptor.capture());
 

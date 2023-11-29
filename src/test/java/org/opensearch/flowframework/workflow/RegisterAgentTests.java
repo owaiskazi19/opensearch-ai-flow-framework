@@ -86,7 +86,7 @@ public class RegisterAgentTests extends OpenSearchTestCase {
             return null;
         }).when(machineLearningNodeClient).registerAgent(any(MLAgent.class), actionListenerCaptor.capture());
 
-        CompletableFuture<WorkflowData> future = registerAgentStep.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = registerAgentStep.execute("nodeId", List.of(inputData));
 
         verify(machineLearningNodeClient).registerAgent(any(MLAgent.class), actionListenerCaptor.capture());
 
@@ -107,7 +107,7 @@ public class RegisterAgentTests extends OpenSearchTestCase {
             return null;
         }).when(machineLearningNodeClient).registerAgent(any(MLAgent.class), actionListenerCaptor.capture());
 
-        CompletableFuture<WorkflowData> future = registerAgentStep.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = registerAgentStep.execute("nodeId", List.of(inputData));
 
         verify(machineLearningNodeClient).registerAgent(any(MLAgent.class), actionListenerCaptor.capture());
 

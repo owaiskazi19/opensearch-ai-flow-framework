@@ -59,7 +59,7 @@ public class CreateIngestPipelineStep implements WorkflowStep {
     }
 
     @Override
-    public CompletableFuture<WorkflowData> execute(List<WorkflowData> data) {
+    public CompletableFuture<WorkflowData> execute(String nodeId, List<WorkflowData> data) {
 
         CompletableFuture<WorkflowData> createIngestPipelineFuture = new CompletableFuture<>();
 

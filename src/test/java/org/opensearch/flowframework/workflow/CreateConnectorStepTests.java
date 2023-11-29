@@ -85,7 +85,7 @@ public class CreateConnectorStepTests extends OpenSearchTestCase {
             return null;
         }).when(machineLearningNodeClient).createConnector(any(MLCreateConnectorInput.class), actionListenerCaptor.capture());
 
-        CompletableFuture<WorkflowData> future = createConnectorStep.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = createConnectorStep.execute("nodeId", List.of(inputData));
 
         verify(machineLearningNodeClient).createConnector(any(MLCreateConnectorInput.class), actionListenerCaptor.capture());
 
@@ -106,7 +106,7 @@ public class CreateConnectorStepTests extends OpenSearchTestCase {
             return null;
         }).when(machineLearningNodeClient).createConnector(any(MLCreateConnectorInput.class), actionListenerCaptor.capture());
 
-        CompletableFuture<WorkflowData> future = createConnectorStep.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = createConnectorStep.execute("nodeId", List.of(inputData));
 
         verify(machineLearningNodeClient).createConnector(any(MLCreateConnectorInput.class), actionListenerCaptor.capture());
 

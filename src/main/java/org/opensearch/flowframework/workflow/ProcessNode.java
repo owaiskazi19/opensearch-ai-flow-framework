@@ -167,7 +167,7 @@ public class ProcessNode {
                     }, this.nodeTimeout, ThreadPool.Names.SAME);
                 }
                 // record start time for this step.
-                CompletableFuture<WorkflowData> stepFuture = this.workflowStep.execute(input);
+                CompletableFuture<WorkflowData> stepFuture = this.workflowStep.execute(this.id, input);
                 // If completed exceptionally, this is a no-op
                 future.complete(stepFuture.get());
                 // record end time passing workflow steps

@@ -91,7 +91,7 @@ public class CreateIndexStepTests extends OpenSearchTestCase {
     public void testCreateIndexStep() throws ExecutionException, InterruptedException {
         @SuppressWarnings({ "unchecked" })
         ArgumentCaptor<ActionListener<CreateIndexResponse>> actionListenerCaptor = ArgumentCaptor.forClass(ActionListener.class);
-        CompletableFuture<WorkflowData> future = createIndexStep.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = createIndexStep.execute("nodeId", List.of(inputData));
         assertFalse(future.isDone());
         verify(indicesAdminClient, times(1)).create(any(CreateIndexRequest.class), actionListenerCaptor.capture());
         actionListenerCaptor.getValue().onResponse(new CreateIndexResponse(true, true, "demo"));
@@ -106,7 +106,7 @@ public class CreateIndexStepTests extends OpenSearchTestCase {
     public void testCreateIndexStepFailure() throws ExecutionException, InterruptedException {
         @SuppressWarnings({ "unchecked" })
         ArgumentCaptor<ActionListener<CreateIndexResponse>> actionListenerCaptor = ArgumentCaptor.forClass(ActionListener.class);
-        CompletableFuture<WorkflowData> future = createIndexStep.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = createIndexStep.execute("nodeId", List.of(inputData));
         assertFalse(future.isDone());
         verify(indicesAdminClient, times(1)).create(any(CreateIndexRequest.class), actionListenerCaptor.capture());
 

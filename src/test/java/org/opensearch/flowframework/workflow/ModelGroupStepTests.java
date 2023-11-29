@@ -74,7 +74,7 @@ public class ModelGroupStepTests extends OpenSearchTestCase {
             return null;
         }).when(machineLearningNodeClient).registerModelGroup(any(MLRegisterModelGroupInput.class), actionListenerCaptor.capture());
 
-        CompletableFuture<WorkflowData> future = modelGroupStep.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = modelGroupStep.execute("nodeId", List.of(inputData));
 
         verify(machineLearningNodeClient).registerModelGroup(any(MLRegisterModelGroupInput.class), actionListenerCaptor.capture());
 
@@ -96,7 +96,7 @@ public class ModelGroupStepTests extends OpenSearchTestCase {
             return null;
         }).when(machineLearningNodeClient).registerModelGroup(any(MLRegisterModelGroupInput.class), actionListenerCaptor.capture());
 
-        CompletableFuture<WorkflowData> future = modelGroupStep.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = modelGroupStep.execute("nodeId", List.of(inputData));
 
         verify(machineLearningNodeClient).registerModelGroup(any(MLRegisterModelGroupInput.class), actionListenerCaptor.capture());
 
@@ -110,7 +110,7 @@ public class ModelGroupStepTests extends OpenSearchTestCase {
     public void testRegisterModelGroupWithNoName() throws IOException {
         ModelGroupStep modelGroupStep = new ModelGroupStep(machineLearningNodeClient);
 
-        CompletableFuture<WorkflowData> future = modelGroupStep.execute(List.of(inputDataWithNoName));
+        CompletableFuture<WorkflowData> future = modelGroupStep.execute("nodeId", List.of(inputDataWithNoName));
 
         assertTrue(future.isCompletedExceptionally());
         ExecutionException ex = assertThrows(ExecutionException.class, () -> future.get().getContent());

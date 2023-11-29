@@ -68,7 +68,7 @@ public class RegisterAgentStep implements WorkflowStep {
     }
 
     @Override
-    public CompletableFuture<WorkflowData> execute(List<WorkflowData> data) throws IOException {
+    public CompletableFuture<WorkflowData> execute(String nodeId, List<WorkflowData> data) throws IOException {
 
         CompletableFuture<WorkflowData> registerAgentModelFuture = new CompletableFuture<>();
 

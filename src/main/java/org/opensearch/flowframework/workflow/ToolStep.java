@@ -39,7 +39,7 @@ public class ToolStep implements WorkflowStep {
     static final String NAME = "tool";
 
     @Override
-    public CompletableFuture<WorkflowData> execute(List<WorkflowData> data) throws IOException {
+    public CompletableFuture<WorkflowData> execute(String nodeId, List<WorkflowData> data) throws IOException {
         String type = null;
         String name = null;
         String description = null;

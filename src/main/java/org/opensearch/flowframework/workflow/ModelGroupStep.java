@@ -53,7 +53,7 @@ public class ModelGroupStep implements WorkflowStep {
     }
 
     @Override
-    public CompletableFuture<WorkflowData> execute(List<WorkflowData> data) throws IOException {
+    public CompletableFuture<WorkflowData> execute(String nodeId, List<WorkflowData> data) throws IOException {
 
         CompletableFuture<WorkflowData> registerModelGroupFuture = new CompletableFuture<>();
 

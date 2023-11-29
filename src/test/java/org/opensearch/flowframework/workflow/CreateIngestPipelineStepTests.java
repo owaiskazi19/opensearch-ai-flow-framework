@@ -70,7 +70,7 @@ public class CreateIngestPipelineStepTests extends OpenSearchTestCase {
 
         @SuppressWarnings("unchecked")
         ArgumentCaptor<ActionListener<AcknowledgedResponse>> actionListenerCaptor = ArgumentCaptor.forClass(ActionListener.class);
-        CompletableFuture<WorkflowData> future = createIngestPipelineStep.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = createIngestPipelineStep.execute("nodeId", List.of(inputData));
 
         assertFalse(future.isDone());
 
@@ -88,7 +88,7 @@ public class CreateIngestPipelineStepTests extends OpenSearchTestCase {
 
         @SuppressWarnings("unchecked")
         ArgumentCaptor<ActionListener<AcknowledgedResponse>> actionListenerCaptor = ArgumentCaptor.forClass(ActionListener.class);
-        CompletableFuture<WorkflowData> future = createIngestPipelineStep.execute(List.of(inputData));
+        CompletableFuture<WorkflowData> future = createIngestPipelineStep.execute("nodeId", List.of(inputData));
 
         assertFalse(future.isDone());
 
@@ -116,7 +116,7 @@ public class CreateIngestPipelineStepTests extends OpenSearchTestCase {
             )
         );
 
-        CompletableFuture<WorkflowData> future = createIngestPipelineStep.execute(List.of(incorrectData));
+        CompletableFuture<WorkflowData> future = createIngestPipelineStep.execute("nodeId", List.of(incorrectData));
         assertTrue(future.isDone() && future.isCompletedExceptionally());
 
         ExecutionException exception = assertThrows(ExecutionException.class, () -> future.get());

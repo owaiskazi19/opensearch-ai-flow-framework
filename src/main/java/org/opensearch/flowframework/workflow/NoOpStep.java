@@ -21,7 +21,7 @@ public class NoOpStep implements WorkflowStep {
     public static final String NAME = "noop";
 
     @Override
-    public CompletableFuture<WorkflowData> execute(List<WorkflowData> data) throws IOException {
+    public CompletableFuture<WorkflowData> execute(String nodeId, List<WorkflowData> data) throws IOException {
         return CompletableFuture.completedFuture(WorkflowData.EMPTY);
     }
 

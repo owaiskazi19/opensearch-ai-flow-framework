@@ -86,7 +86,7 @@ public class RegisterLocalModelStepTests extends OpenSearchTestCase {
             return null;
         }).when(machineLearningNodeClient).register(any(MLRegisterModelInput.class), any());
 
-        CompletableFuture<WorkflowData> future = registerLocalModelStep.execute(List.of(workflowData));
+        CompletableFuture<WorkflowData> future = registerLocalModelStep.execute("nodeId", List.of(workflowData));
         verify(machineLearningNodeClient).register(any(MLRegisterModelInput.class), any());
 
         assertTrue(future.isDone());
@@ -104,7 +104,7 @@ public class RegisterLocalModelStepTests extends OpenSearchTestCase {
             return null;
         }).when(machineLearningNodeClient).register(any(MLRegisterModelInput.class), any());
 
-        CompletableFuture<WorkflowData> future = this.registerLocalModelStep.execute(List.of(workflowData));
+        CompletableFuture<WorkflowData> future = this.registerLocalModelStep.execute("nodeId", List.of(workflowData));
         assertTrue(future.isDone());
         assertTrue(future.isCompletedExceptionally());
         ExecutionException ex = expectThrows(ExecutionException.class, () -> future.get().getClass());
@@ -113,7 +113,7 @@ public class RegisterLocalModelStepTests extends OpenSearchTestCase {
     }
 
     public void testMissingInputs() {
-        CompletableFuture<WorkflowData> future = registerLocalModelStep.execute(List.of(WorkflowData.EMPTY));
+        CompletableFuture<WorkflowData> future = registerLocalModelStep.execute("nodeId", List.of(WorkflowData.EMPTY));
         assertTrue(future.isDone());
         assertTrue(future.isCompletedExceptionally());
         ExecutionException ex = assertThrows(ExecutionException.class, () -> future.get().getContent());

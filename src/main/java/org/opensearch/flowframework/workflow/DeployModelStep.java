@@ -41,7 +41,7 @@ public class DeployModelStep implements WorkflowStep {
     }
 
     @Override
-    public CompletableFuture<WorkflowData> execute(List<WorkflowData> data) {
+    public CompletableFuture<WorkflowData> execute(String nodeId, List<WorkflowData> data) {
 
         CompletableFuture<WorkflowData> deployModelFuture = new CompletableFuture<>();
 
