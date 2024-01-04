@@ -45,6 +45,7 @@ import static org.opensearch.flowframework.common.CommonValue.MODEL_TYPE;
 import static org.opensearch.flowframework.common.CommonValue.NAME_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.URL;
 import static org.opensearch.flowframework.common.CommonValue.VERSION_FIELD;
+import static org.opensearch.flowframework.common.FlowFrameworkSettings.MAX_GET_TASK_REQUEST_RETRY;
 import static org.opensearch.flowframework.common.WorkflowResources.MODEL_GROUP_ID;
 
 /**
@@ -57,6 +58,7 @@ public class RegisterLocalModelStep extends AbstractRetryableWorkflowStep {
     private final MachineLearningNodeClient mlClient;
 
     private final FlowFrameworkIndicesHandler flowFrameworkIndicesHandler;
+    private int maxRetry;
 
     /** The name of this step, used as a key in the template and the {@link WorkflowStepFactory} */
     public static final String NAME = "register_local_model";
@@ -79,6 +81,8 @@ public class RegisterLocalModelStep extends AbstractRetryableWorkflowStep {
         super(settings, threadPool, clusterService, mlClient, flowFrameworkIndicesHandler);
         this.mlClient = mlClient;
         this.flowFrameworkIndicesHandler = flowFrameworkIndicesHandler;
+        this.maxRetry =  MAX_GET_TASK_REQUEST_RETRY.get(settings);
+        clusterService.getClusterSettings().addSettingsUpdateConsumer(MAX_GET_TASK_REQUEST_RETRY, it -> maxRetry = it);
     }
 
     @Override
@@ -104,7 +108,8 @@ public class RegisterLocalModelStep extends AbstractRetryableWorkflowStep {
                     currentNodeId,
                     registerLocalModelFuture,
                     taskId,
-                    "Local model registration"
+                    "Local model registration",
+                        maxRetry
                 );
             }
 

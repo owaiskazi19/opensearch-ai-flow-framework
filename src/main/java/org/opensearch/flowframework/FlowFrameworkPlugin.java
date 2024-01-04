@@ -65,6 +65,7 @@ import org.opensearch.threadpool.FixedExecutorBuilder;
 import org.opensearch.threadpool.ThreadPool;
 import org.opensearch.watcher.ResourceWatcherService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
@@ -168,7 +169,13 @@ public class FlowFrameworkPlugin extends Plugin implements ActionPlugin {
 
     @Override
     public List<Setting<?>> getSettings() {
-        return List.of(FLOW_FRAMEWORK_ENABLED, MAX_WORKFLOWS, MAX_WORKFLOW_STEPS, WORKFLOW_REQUEST_TIMEOUT, MAX_GET_TASK_REQUEST_RETRY);
+        List<Setting<?>> settingList = new ArrayList<>();
+        settingList.add(FLOW_FRAMEWORK_ENABLED);
+        settingList.add(MAX_WORKFLOWS);
+        settingList.add(MAX_WORKFLOW_STEPS);
+        settingList.add(WORKFLOW_REQUEST_TIMEOUT);
+        settingList.add(MAX_GET_TASK_REQUEST_RETRY);
+        return  settingList;
     }
 
     @Override

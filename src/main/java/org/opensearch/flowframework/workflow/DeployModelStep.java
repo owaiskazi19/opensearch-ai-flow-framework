@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+import static org.opensearch.flowframework.common.FlowFrameworkSettings.MAX_GET_TASK_REQUEST_RETRY;
 import static org.opensearch.flowframework.common.WorkflowResources.MODEL_ID;
 
 /**
@@ -37,6 +38,7 @@ public class DeployModelStep extends AbstractRetryableWorkflowStep {
 
     private final MachineLearningNodeClient mlClient;
     private final FlowFrameworkIndicesHandler flowFrameworkIndicesHandler;
+    private int maxRetry;
 
     /** The name of this step, used as a key in the template and the {@link WorkflowStepFactory} */
     public static final String NAME = "deploy_model";
@@ -59,6 +61,8 @@ public class DeployModelStep extends AbstractRetryableWorkflowStep {
         super(settings, threadPool, clusterService, mlClient, flowFrameworkIndicesHandler);
         this.mlClient = mlClient;
         this.flowFrameworkIndicesHandler = flowFrameworkIndicesHandler;
+        this.maxRetry =  MAX_GET_TASK_REQUEST_RETRY.get(settings);
+        clusterService.getClusterSettings().addSettingsUpdateConsumer(MAX_GET_TASK_REQUEST_RETRY, it -> maxRetry = it);
     }
 
     @Override
@@ -78,7 +82,7 @@ public class DeployModelStep extends AbstractRetryableWorkflowStep {
                 String taskId = mlDeployModelResponse.getTaskId();
 
                 // Attempt to retrieve the model ID
-                retryableGetMlTask(currentNodeInputs.getWorkflowId(), currentNodeId, deployModelFuture, taskId, "Deploy model");
+                retryableGetMlTask(currentNodeInputs.getWorkflowId(), currentNodeId, deployModelFuture, taskId, "Deploy model", maxRetry);
             }
 
             @Override

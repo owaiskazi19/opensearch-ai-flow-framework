@@ -36,8 +36,8 @@ import static org.opensearch.flowframework.common.WorkflowResources.getResourceB
  */
 public abstract class AbstractRetryableWorkflowStep implements WorkflowStep {
     private static final Logger logger = LogManager.getLogger(AbstractRetryableWorkflowStep.class);
-    /** The maximum number of transport request retries */
-    protected volatile Integer maxRetry;
+//    /** The maximum number of transport request retries */
+//    protected volatile Integer maxRetry;
     private final MachineLearningNodeClient mlClient;
     private final FlowFrameworkIndicesHandler flowFrameworkIndicesHandler;
     private ThreadPool threadPool;
@@ -58,8 +58,9 @@ public abstract class AbstractRetryableWorkflowStep implements WorkflowStep {
         FlowFrameworkIndicesHandler flowFrameworkIndicesHandler
     ) {
         this.threadPool = threadPool;
-        this.maxRetry = MAX_GET_TASK_REQUEST_RETRY.get(settings);
-        clusterService.getClusterSettings().addSettingsUpdateConsumer(MAX_GET_TASK_REQUEST_RETRY, it -> maxRetry = it);
+//        this.maxRetry = MAX_GET_TASK_REQUEST_RETRY.get(settings);
+//        clusterService.getClusterSettings().addSettingsUpdateConsumer(MAX_GET_TASK_REQUEST_RETRY, this::setMaxRetry);
+//        setMaxRetry(maxRetry);
         this.mlClient = mlClient;
         this.flowFrameworkIndicesHandler = flowFrameworkIndicesHandler;
     }
@@ -77,11 +78,12 @@ public abstract class AbstractRetryableWorkflowStep implements WorkflowStep {
         String nodeId,
         CompletableFuture<WorkflowData> future,
         String taskId,
-        String workflowStep
+        String workflowStep,
+        Integer maxRetry
     ) {
         AtomicInteger retries = new AtomicInteger();
         CompletableFuture.runAsync(() -> {
-            while (retries.getAndIncrement() < this.maxRetry && !future.isDone()) {
+            while (retries.getAndIncrement() < maxRetry && !future.isDone()) {
                 mlClient.getTask(taskId, ActionListener.wrap(response -> {
                     switch (response.getState()) {
                         case COMPLETED:
