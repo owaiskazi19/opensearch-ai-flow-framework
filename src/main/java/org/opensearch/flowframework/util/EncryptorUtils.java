@@ -207,6 +207,10 @@ public class EncryptorUtils {
      * @return the redacted template
      */
     public Template redactTemplateSecuredFields(User user, Template template) {
+        if (template.hidden()) {
+            return null;
+        }
+
         Map<String, Workflow> processedWorkflows = new HashMap<>();
 
         for (Map.Entry<String, Workflow> entry : template.workflows().entrySet()) {
