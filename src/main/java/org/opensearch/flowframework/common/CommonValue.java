@@ -46,6 +46,8 @@ public class CommonValue {
     public static final String MASTER_KEY = "master_key";
     /** Create Time field  name */
     public static final String CREATE_TIME = "create_time";
+    /** The template field name for hidden templates **/
+    public static final String HIDDEN_FIELD = "is_hidden";
     /** The template field name for the user who created the workflow **/
     public static final String USER_FIELD = "user";
     /** The created time field */
