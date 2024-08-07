@@ -54,6 +54,7 @@ import org.opensearch.flowframework.transport.SearchWorkflowAction;
 import org.opensearch.flowframework.transport.SearchWorkflowStateAction;
 import org.opensearch.flowframework.transport.SearchWorkflowStateTransportAction;
 import org.opensearch.flowframework.transport.SearchWorkflowTransportAction;
+import org.opensearch.flowframework.transport.handler.SearchHandler;
 import org.opensearch.flowframework.util.EncryptorUtils;
 import org.opensearch.flowframework.workflow.WorkflowProcessSorter;
 import org.opensearch.flowframework.workflow.WorkflowStepFactory;
@@ -82,11 +83,7 @@ import static org.opensearch.flowframework.common.CommonValue.GLOBAL_CONTEXT_IND
 import static org.opensearch.flowframework.common.CommonValue.PROVISION_WORKFLOW_THREAD_POOL;
 import static org.opensearch.flowframework.common.CommonValue.WORKFLOW_STATE_INDEX;
 import static org.opensearch.flowframework.common.CommonValue.WORKFLOW_THREAD_POOL;
-import static org.opensearch.flowframework.common.FlowFrameworkSettings.FLOW_FRAMEWORK_ENABLED;
-import static org.opensearch.flowframework.common.FlowFrameworkSettings.MAX_WORKFLOWS;
-import static org.opensearch.flowframework.common.FlowFrameworkSettings.MAX_WORKFLOW_STEPS;
-import static org.opensearch.flowframework.common.FlowFrameworkSettings.TASK_REQUEST_RETRY_DURATION;
-import static org.opensearch.flowframework.common.FlowFrameworkSettings.WORKFLOW_REQUEST_TIMEOUT;
+import static org.opensearch.flowframework.common.FlowFrameworkSettings.*;
 
 /**
  * An OpenSearch plugin that enables builders to innovate AI apps on OpenSearch.
@@ -139,7 +136,16 @@ public class FlowFrameworkPlugin extends Plugin implements ActionPlugin, SystemI
             flowFrameworkSettings
         );
 
-        return List.of(workflowStepFactory, workflowProcessSorter, encryptorUtils, flowFrameworkIndicesHandler, flowFrameworkSettings);
+        SearchHandler searchHandler = new SearchHandler(settings, clusterService, client, FlowFrameworkSettings.FILTER_BY_BACKEND_ROLES);
+
+        return List.of(
+            workflowStepFactory,
+            workflowProcessSorter,
+            encryptorUtils,
+            flowFrameworkIndicesHandler,
+            searchHandler,
+            flowFrameworkSettings
+        );
     }
 
     @Override
@@ -182,7 +188,7 @@ public class FlowFrameworkPlugin extends Plugin implements ActionPlugin, SystemI
 
     @Override
     public List<Setting<?>> getSettings() {
-        return List.of(FLOW_FRAMEWORK_ENABLED, MAX_WORKFLOWS, MAX_WORKFLOW_STEPS, WORKFLOW_REQUEST_TIMEOUT, TASK_REQUEST_RETRY_DURATION);
+        return List.of(FLOW_FRAMEWORK_ENABLED, MAX_WORKFLOWS, MAX_WORKFLOW_STEPS, WORKFLOW_REQUEST_TIMEOUT, TASK_REQUEST_RETRY_DURATION, FILTER_BY_BACKEND_ROLES);
     }
 
     @Override

@@ -16,10 +16,14 @@ import org.opensearch.action.support.ActionFilters;
 import org.opensearch.action.support.HandledTransportAction;
 import org.opensearch.action.support.PlainActionFuture;
 import org.opensearch.client.Client;
+import org.opensearch.cluster.service.ClusterService;
 import org.opensearch.common.inject.Inject;
+import org.opensearch.common.settings.Settings;
 import org.opensearch.common.util.concurrent.ThreadContext;
+import org.opensearch.commons.authuser.User;
 import org.opensearch.core.action.ActionListener;
 import org.opensearch.core.rest.RestStatus;
+import org.opensearch.core.xcontent.NamedXContentRegistry;
 import org.opensearch.flowframework.common.FlowFrameworkSettings;
 import org.opensearch.flowframework.exception.FlowFrameworkException;
 import org.opensearch.flowframework.indices.FlowFrameworkIndicesHandler;
@@ -47,9 +51,11 @@ import static org.opensearch.flowframework.common.CommonValue.PROVISIONING_PROGR
 import static org.opensearch.flowframework.common.CommonValue.PROVISION_END_TIME_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.RESOURCES_CREATED_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.STATE_FIELD;
+import static org.opensearch.flowframework.common.FlowFrameworkSettings.FILTER_BY_BACKEND_ROLES;
 import static org.opensearch.flowframework.common.WorkflowResources.getDeprovisionStepByWorkflowStep;
 import static org.opensearch.flowframework.common.WorkflowResources.getResourceByWorkflowStep;
 import static org.opensearch.flowframework.util.ParseUtils.getUserContext;
+import static org.opensearch.flowframework.util.ParseUtils.resolveUserAndExecute;
 
 /**
  * Transport Action to deprovision a workflow from a stored use case template
@@ -63,6 +69,9 @@ public class DeprovisionWorkflowTransportAction extends HandledTransportAction<W
     private final WorkflowStepFactory workflowStepFactory;
     private final FlowFrameworkIndicesHandler flowFrameworkIndicesHandler;
     private final FlowFrameworkSettings flowFrameworkSettings;
+    private volatile Boolean filterByEnabled;
+    private final ClusterService clusterService;
+    private final NamedXContentRegistry xContentRegistry;
 
     /**
      * Instantiates a new ProvisionWorkflowTransportAction
@@ -82,7 +91,10 @@ public class DeprovisionWorkflowTransportAction extends HandledTransportAction<W
         Client client,
         WorkflowStepFactory workflowStepFactory,
         FlowFrameworkIndicesHandler flowFrameworkIndicesHandler,
-        FlowFrameworkSettings flowFrameworkSettings
+        FlowFrameworkSettings flowFrameworkSettings,
+        ClusterService clusterService,
+        NamedXContentRegistry xContentRegistry,
+        Settings settings
     ) {
         super(DeprovisionWorkflowAction.NAME, transportService, actionFilters, WorkflowRequest::new);
         this.threadPool = threadPool;
@@ -90,32 +102,57 @@ public class DeprovisionWorkflowTransportAction extends HandledTransportAction<W
         this.workflowStepFactory = workflowStepFactory;
         this.flowFrameworkIndicesHandler = flowFrameworkIndicesHandler;
         this.flowFrameworkSettings = flowFrameworkSettings;
+        filterByEnabled = FILTER_BY_BACKEND_ROLES.get(settings);
+        this.xContentRegistry = xContentRegistry;
+        this.clusterService = clusterService;
+        clusterService.getClusterSettings().addSettingsUpdateConsumer(FILTER_BY_BACKEND_ROLES, it -> filterByEnabled = it);
     }
 
     @Override
     protected void doExecute(Task task, WorkflowRequest request, ActionListener<WorkflowResponse> listener) {
         String workflowId = request.getWorkflowId();
-        GetWorkflowStateRequest getStateRequest = new GetWorkflowStateRequest(workflowId, true);
+
+        User user = getUserContext(client);
 
         // Stash thread context to interact with system index
         try (ThreadContext.StoredContext context = client.threadPool().getThreadContext().stashContext()) {
-            logger.info("Querying state for workflow: {}", workflowId);
-            client.execute(GetWorkflowStateAction.INSTANCE, getStateRequest, ActionListener.wrap(response -> {
-                context.restore();
+            resolveUserAndExecute(
+                user,
+                workflowId,
+                filterByEnabled,
+                listener,
+                () -> executeDeprovisionRequest(request, listener, context),
+                client,
+                clusterService,
+                xContentRegistry
+            );
 
-                // Retrieve resources from workflow state and deprovision
-                threadPool.executor(DEPROVISION_WORKFLOW_THREAD_POOL)
-                    .execute(() -> executeDeprovisionSequence(workflowId, response.getWorkflowState().resourcesCreated(), listener));
-            }, exception -> {
-                String errorMessage = "Failed to get workflow state for workflow " + workflowId;
-                logger.error(errorMessage, exception);
-                listener.onFailure(new FlowFrameworkException(errorMessage, ExceptionsHelper.status(exception)));
-            }));
         } catch (Exception e) {
             String errorMessage = "Failed to retrieve template from global context.";
             logger.error(errorMessage, e);
             listener.onFailure(new FlowFrameworkException(errorMessage, ExceptionsHelper.status(e)));
         }
+    }
+
+    private void executeDeprovisionRequest(
+        WorkflowRequest request,
+        ActionListener<WorkflowResponse> listener,
+        ThreadContext.StoredContext context
+    ) {
+        String workflowId = request.getWorkflowId();
+        GetWorkflowStateRequest getStateRequest = new GetWorkflowStateRequest(workflowId, true);
+        logger.info("Querying state for workflow: {}", workflowId);
+        client.execute(GetWorkflowStateAction.INSTANCE, getStateRequest, ActionListener.wrap(response -> {
+            context.restore();
+
+            // Retrieve resources from workflow state and deprovision
+            threadPool.executor(DEPROVISION_WORKFLOW_THREAD_POOL)
+                .execute(() -> executeDeprovisionSequence(workflowId, response.getWorkflowState().resourcesCreated(), listener));
+        }, exception -> {
+            String errorMessage = "Failed to get workflow state for workflow " + workflowId;
+            logger.error(errorMessage, exception);
+            listener.onFailure(new FlowFrameworkException(errorMessage, ExceptionsHelper.status(exception)));
+        }));
     }
 
     private void executeDeprovisionSequence(
