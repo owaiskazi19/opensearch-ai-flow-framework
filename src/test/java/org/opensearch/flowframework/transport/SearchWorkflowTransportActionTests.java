@@ -14,18 +14,13 @@ import org.opensearch.action.support.ActionFilters;
 import org.opensearch.client.Client;
 import org.opensearch.common.settings.Settings;
 import org.opensearch.common.util.concurrent.ThreadContext;
-import org.opensearch.commons.authuser.User;
 import org.opensearch.core.action.ActionListener;
 import org.opensearch.flowframework.transport.handler.SearchHandler;
-import org.opensearch.flowframework.util.ParseUtils;
-import org.opensearch.ml.repackage.com.google.common.collect.ImmutableList;
 import org.opensearch.search.builder.SearchSourceBuilder;
 import org.opensearch.tasks.Task;
 import org.opensearch.test.OpenSearchTestCase;
 import org.opensearch.threadpool.ThreadPool;
 import org.opensearch.transport.TransportService;
-
-import org.mockito.ArgumentCaptor;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -37,7 +32,6 @@ public class SearchWorkflowTransportActionTests extends OpenSearchTestCase {
     private ThreadPool threadPool;
     ThreadContext threadContext;
     private SearchHandler searchHandler;
-
 
     @Override
     public void setUp() throws Exception {
@@ -83,7 +77,6 @@ public class SearchWorkflowTransportActionTests extends OpenSearchTestCase {
             responseListener.onResponse(mock(SearchResponse.class));
             return null;
         }).when(client).search(any(SearchRequest.class), any(ActionListener.class));
-
 
         searchWorkflowTransportAction.doExecute(mock(Task.class), searchRequest, listener);
         verify(searchHandler).search(any(SearchRequest.class), any(ActionListener.class));

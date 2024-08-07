@@ -28,9 +28,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.opensearch.flowframework.common.FlowFrameworkSettings.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.opensearch.flowframework.common.FlowFrameworkSettings.*;
 
 public class FlowFrameworkPluginTests extends OpenSearchTestCase {
 
@@ -61,7 +61,14 @@ public class FlowFrameworkPluginTests extends OpenSearchTestCase {
 
         final Set<Setting<?>> settingsSet = Stream.concat(
             ClusterSettings.BUILT_IN_CLUSTER_SETTINGS.stream(),
-            Stream.of(FLOW_FRAMEWORK_ENABLED, MAX_WORKFLOWS, MAX_WORKFLOW_STEPS, WORKFLOW_REQUEST_TIMEOUT, TASK_REQUEST_RETRY_DURATION, FILTER_BY_BACKEND_ROLES)
+            Stream.of(
+                FLOW_FRAMEWORK_ENABLED,
+                MAX_WORKFLOWS,
+                MAX_WORKFLOW_STEPS,
+                WORKFLOW_REQUEST_TIMEOUT,
+                TASK_REQUEST_RETRY_DURATION,
+                FILTER_BY_BACKEND_ROLES
+            )
         ).collect(Collectors.toSet());
         clusterSettings = new ClusterSettings(settings, settingsSet);
         clusterService = mock(ClusterService.class);

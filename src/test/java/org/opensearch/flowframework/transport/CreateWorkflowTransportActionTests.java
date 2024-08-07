@@ -112,12 +112,11 @@ public class CreateWorkflowTransportActionTests extends OpenSearchTestCase {
         FlowFrameworkIndex index = FlowFrameworkIndex.GLOBAL_CONTEXT;
         ClusterName clusterName = new ClusterName("test");
 
-        Settings indexSettings = Settings
-                .builder()
-                .put(IndexMetadata.SETTING_NUMBER_OF_SHARDS, 1)
-                .put(IndexMetadata.SETTING_NUMBER_OF_REPLICAS, 0)
-                .put(IndexMetadata.SETTING_VERSION_CREATED, Version.CURRENT)
-                .build();
+        Settings indexSettings = Settings.builder()
+            .put(IndexMetadata.SETTING_NUMBER_OF_SHARDS, 1)
+            .put(IndexMetadata.SETTING_NUMBER_OF_REPLICAS, 0)
+            .put(IndexMetadata.SETTING_VERSION_CREATED, Version.CURRENT)
+            .build();
         final Settings.Builder existingSettings = Settings.builder().put(indexSettings).put(IndexMetadata.SETTING_INDEX_UUID, "test2UUID");
 
         IndexMetadata indexMetaData = IndexMetadata.builder(GLOBAL_CONTEXT_INDEX).settings(existingSettings).build();
@@ -125,7 +124,6 @@ public class CreateWorkflowTransportActionTests extends OpenSearchTestCase {
         indices.put(GLOBAL_CONTEXT_INDEX, indexMetaData);
         ClusterState clusterState = ClusterState.builder(clusterName).metadata(Metadata.builder().indices(indices).build()).build();
         when(clusterService.state()).thenReturn(clusterState);
-
 
         // Spy this action to stub check max workflows
         this.createWorkflowTransportAction = spy(
@@ -388,7 +386,11 @@ public class CreateWorkflowTransportActionTests extends OpenSearchTestCase {
         GetResponse getWorkflowResponse = TestHelpers.createGetResponse(template, "123", GLOBAL_CONTEXT_INDEX);
         doAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            assertEquals(String.format(Locale.ROOT, "The size of args is %d.  Its content is %s", args.length, Arrays.toString(args)), 2, args.length);
+            assertEquals(
+                String.format(Locale.ROOT, "The size of args is %d.  Its content is %s", args.length, Arrays.toString(args)),
+                2,
+                args.length
+            );
 
             assertTrue(args[0] instanceof GetRequest);
             assertTrue(args[1] instanceof ActionListener);
@@ -426,7 +428,11 @@ public class CreateWorkflowTransportActionTests extends OpenSearchTestCase {
         GetResponse getWorkflowResponse = TestHelpers.createGetResponse(template, "123", GLOBAL_CONTEXT_INDEX);
         doAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            assertEquals(String.format(Locale.ROOT, "The size of args is %d.  Its content is %s", args.length, Arrays.toString(args)), 2, args.length);
+            assertEquals(
+                String.format(Locale.ROOT, "The size of args is %d.  Its content is %s", args.length, Arrays.toString(args)),
+                2,
+                args.length
+            );
 
             assertTrue(args[0] instanceof GetRequest);
             assertTrue(args[1] instanceof ActionListener);
@@ -471,7 +477,11 @@ public class CreateWorkflowTransportActionTests extends OpenSearchTestCase {
         GetResponse getWorkflowResponse = TestHelpers.createGetResponse(template, "123", GLOBAL_CONTEXT_INDEX);
         doAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            assertEquals(String.format(Locale.ROOT, "The size of args is %d.  Its content is %s", args.length, Arrays.toString(args)), 2, args.length);
+            assertEquals(
+                String.format(Locale.ROOT, "The size of args is %d.  Its content is %s", args.length, Arrays.toString(args)),
+                2,
+                args.length
+            );
 
             assertTrue(args[0] instanceof GetRequest);
             assertTrue(args[1] instanceof ActionListener);
@@ -498,13 +508,13 @@ public class CreateWorkflowTransportActionTests extends OpenSearchTestCase {
         @SuppressWarnings("unchecked")
         ActionListener<WorkflowResponse> listener = mock(ActionListener.class);
 
-        Template template1 = new Template.Builder().name("new name").description("test").useCase(null).uiMetadata(Map.of("foo", "bar")).build();
+        Template template1 = new Template.Builder().name("new name")
+            .description("test")
+            .useCase(null)
+            .uiMetadata(Map.of("foo", "bar"))
+            .build();
 
-        WorkflowRequest updateWorkflow = new WorkflowRequest(
-            "1",
-                template1,
-            Map.of(UPDATE_WORKFLOW_FIELDS, "true")
-        );
+        WorkflowRequest updateWorkflow = new WorkflowRequest("1", template1, Map.of(UPDATE_WORKFLOW_FIELDS, "true"));
 
         doAnswer(invocation -> {
             ActionListener<GetResponse> getListener = invocation.getArgument(1);
@@ -518,7 +528,11 @@ public class CreateWorkflowTransportActionTests extends OpenSearchTestCase {
         GetResponse getWorkflowResponse = TestHelpers.createGetResponse(template, "123", GLOBAL_CONTEXT_INDEX);
         doAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            assertEquals(String.format(Locale.ROOT, "The size of args is %d.  Its content is %s", args.length, Arrays.toString(args)), 2, args.length);
+            assertEquals(
+                String.format(Locale.ROOT, "The size of args is %d.  Its content is %s", args.length, Arrays.toString(args)),
+                2,
+                args.length
+            );
 
             assertTrue(args[0] instanceof GetRequest);
             assertTrue(args[1] instanceof ActionListener);
@@ -571,7 +585,11 @@ public class CreateWorkflowTransportActionTests extends OpenSearchTestCase {
         GetResponse getWorkflowResponse1 = TestHelpers.createGetResponse(template1, "123", GLOBAL_CONTEXT_INDEX);
         doAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            assertEquals(String.format(Locale.ROOT, "The size of args is %d.  Its content is %s", args.length, Arrays.toString(args)), 2, args.length);
+            assertEquals(
+                String.format(Locale.ROOT, "The size of args is %d.  Its content is %s", args.length, Arrays.toString(args)),
+                2,
+                args.length
+            );
 
             assertTrue(args[0] instanceof GetRequest);
             assertTrue(args[1] instanceof ActionListener);

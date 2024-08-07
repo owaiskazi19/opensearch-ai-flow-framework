@@ -83,7 +83,12 @@ import static org.opensearch.flowframework.common.CommonValue.GLOBAL_CONTEXT_IND
 import static org.opensearch.flowframework.common.CommonValue.PROVISION_WORKFLOW_THREAD_POOL;
 import static org.opensearch.flowframework.common.CommonValue.WORKFLOW_STATE_INDEX;
 import static org.opensearch.flowframework.common.CommonValue.WORKFLOW_THREAD_POOL;
-import static org.opensearch.flowframework.common.FlowFrameworkSettings.*;
+import static org.opensearch.flowframework.common.FlowFrameworkSettings.FILTER_BY_BACKEND_ROLES;
+import static org.opensearch.flowframework.common.FlowFrameworkSettings.FLOW_FRAMEWORK_ENABLED;
+import static org.opensearch.flowframework.common.FlowFrameworkSettings.MAX_WORKFLOWS;
+import static org.opensearch.flowframework.common.FlowFrameworkSettings.MAX_WORKFLOW_STEPS;
+import static org.opensearch.flowframework.common.FlowFrameworkSettings.TASK_REQUEST_RETRY_DURATION;
+import static org.opensearch.flowframework.common.FlowFrameworkSettings.WORKFLOW_REQUEST_TIMEOUT;
 
 /**
  * An OpenSearch plugin that enables builders to innovate AI apps on OpenSearch.
@@ -188,7 +193,14 @@ public class FlowFrameworkPlugin extends Plugin implements ActionPlugin, SystemI
 
     @Override
     public List<Setting<?>> getSettings() {
-        return List.of(FLOW_FRAMEWORK_ENABLED, MAX_WORKFLOWS, MAX_WORKFLOW_STEPS, WORKFLOW_REQUEST_TIMEOUT, TASK_REQUEST_RETRY_DURATION, FILTER_BY_BACKEND_ROLES);
+        return List.of(
+            FLOW_FRAMEWORK_ENABLED,
+            MAX_WORKFLOWS,
+            MAX_WORKFLOW_STEPS,
+            WORKFLOW_REQUEST_TIMEOUT,
+            TASK_REQUEST_RETRY_DURATION,
+            FILTER_BY_BACKEND_ROLES
+        );
     }
 
     @Override

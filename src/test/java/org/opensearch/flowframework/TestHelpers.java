@@ -183,17 +183,17 @@ public class TestHelpers {
     public static GetResponse createGetResponse(ToXContentObject o, String id, String indexName) throws IOException {
         XContentBuilder content = o.toXContent(XContentFactory.jsonBuilder(), ToXContent.EMPTY_PARAMS);
         return new GetResponse(
-                new GetResult(
-                        indexName,
-                        id,
-                        UNASSIGNED_SEQ_NO,
-                        0,
-                        -1,
-                        true,
-                        BytesReference.bytes(content),
-                        Collections.emptyMap(),
-                        Collections.emptyMap()
-                )
+            new GetResult(
+                indexName,
+                id,
+                UNASSIGNED_SEQ_NO,
+                0,
+                -1,
+                true,
+                BytesReference.bytes(content),
+                Collections.emptyMap(),
+                Collections.emptyMap()
+            )
         );
     }
 
