@@ -42,6 +42,7 @@ import static org.opensearch.flowframework.common.CommonValue.NAME_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.TENANT_ID_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.UI_METADATA_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.USER_FIELD;
+import static org.opensearch.flowframework.common.CommonValue.HIDDEN_FIELD;
 import static org.opensearch.flowframework.common.CommonValue.VERSION_FIELD;
 
 /**
@@ -74,6 +75,7 @@ public class Template implements ToXContentObject {
     private final Map<String, Workflow> workflows;
     private final Map<String, Object> uiMetadata;
     private final User user;
+    private final Boolean isHidden;
     private final Instant createdTime;
     private final Instant lastUpdatedTime;
     private final Instant lastProvisionedTime;
@@ -106,6 +108,7 @@ public class Template implements ToXContentObject {
         Map<String, Workflow> workflows,
         Map<String, Object> uiMetadata,
         User user,
+        Boolean isHidden,
         Instant createdTime,
         Instant lastUpdatedTime,
         Instant lastProvisionedTime,
@@ -120,6 +123,7 @@ public class Template implements ToXContentObject {
         this.workflows = Map.copyOf(workflows);
         this.uiMetadata = uiMetadata;
         this.user = user;
+        this.isHidden = isHidden;
         this.createdTime = createdTime;
         this.lastUpdatedTime = lastUpdatedTime;
         this.lastProvisionedTime = lastProvisionedTime;
@@ -139,6 +143,7 @@ public class Template implements ToXContentObject {
         private Map<String, Workflow> workflows = Collections.emptyMap();
         private Map<String, Object> uiMetadata = null;
         private User user = null;
+        private Boolean isHidden = null;
         private Instant createdTime = null;
         private Instant lastUpdatedTime = null;
         private Instant lastProvisionedTime = null;
@@ -168,6 +173,7 @@ public class Template implements ToXContentObject {
             if (t.getUiMetadata() != null) {
                 this.uiMetadata = Map.copyOf(t.getUiMetadata());
             }
+            this.isHidden = t.hidden();
             this.user = t.getUser();
             this.createdTime = t.createdTime();
             this.lastUpdatedTime = t.lastUpdatedTime();
@@ -246,6 +252,11 @@ public class Template implements ToXContentObject {
             return this;
         }
 
+        public Builder hidden(Boolean isHidden) {
+            this.isHidden = isHidden;
+            return this;
+        }
+
         /**
          * Builder method for adding user
          * @param user user
@@ -320,6 +331,7 @@ public class Template implements ToXContentObject {
                 this.workflows,
                 this.uiMetadata,
                 this.user,
+                this.isHidden,
                 this.createdTime,
                 this.lastUpdatedTime,
                 this.lastProvisionedTime,
@@ -376,6 +388,10 @@ public class Template implements ToXContentObject {
 
         if (uiMetadata != null && !uiMetadata.isEmpty()) {
             xContentBuilder.field(UI_METADATA_FIELD, uiMetadata);
+        }
+
+        if (isHidden != null) {
+            xContentBuilder.field(HIDDEN_FIELD, isHidden);
         }
 
         if (user != null) {
@@ -671,6 +687,14 @@ public class Template implements ToXContentObject {
      */
     public String useCase() {
         return useCase;
+    }
+
+    /**
+     * A hidden field this template
+     * @return the hidden field
+     */
+    public Boolean hidden() {
+        return isHidden;
     }
 
     /**
